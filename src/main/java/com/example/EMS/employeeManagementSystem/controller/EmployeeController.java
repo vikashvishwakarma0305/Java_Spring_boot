@@ -1,11 +1,14 @@
 package com.example.EMS.employeeManagementSystem.controller;
 
+import com.example.EMS.employeeManagementSystem.DTO.AddEmployeeDto;
 import com.example.EMS.employeeManagementSystem.DTO.EmployeeDto;
+
 import com.example.EMS.employeeManagementSystem.service.EmployeeServices;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,13 +20,21 @@ public class EmployeeController {
 
 
     @GetMapping("/employees")
-    public List<EmployeeDto> getAllEmployees(){
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
         System.out.println("hello");
         System.out.println("fsd");
-        return employeeServices.getAllEmployees();
+        return ResponseEntity.status(HttpStatus.OK).body(employeeServices.getAllEmployees());
     }
-    @GetMapping("/getString")
-    public String getHEllo(){
-        return "Hello from spring";
+    @GetMapping("/getEmployeeById/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(employeeServices.getEmployeeByID(id));
     }
+    @PostMapping("/addEmployee")
+    public ResponseEntity<String> addEmployee(@RequestBody AddEmployeeDto employee){
+
+        employeeServices.addEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Employee enroll successfully");
+
+    }
+
 }
